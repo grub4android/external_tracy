@@ -740,6 +740,32 @@ static void _main_interrupt_handler(int sig)
     return;
 }
 
+/* Loop over all child structs in the children list and detach them */
+void tracy_stop(struct tracy *tracy)
+{
+	struct tracy_ll *children = tracy->childs;
+    struct tracy_child *tc;
+    struct tracy_ll_item *cur = children->head;
+
+    /* Walk over all items in the list */
+    while(cur) {
+        tc = cur->data;
+
+        fprintf(stderr, _b("Detaching from child %d")"\n", tc->pid);
+        /* TODO: What can we do in case of failure? */
+        tracy_detach_child(tc);
+
+        /* Free data and fetch next item */
+        cur = cur->next;
+    }
+
+	/* Cancel main loop */
+	main_loop_go_on = 0;
+
+    return;
+}
+
+
 /* Main function for simple tracy based applications */
 int tracy_main(struct tracy *tracy) {
     struct tracy_event *e;

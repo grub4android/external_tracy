@@ -280,6 +280,10 @@ static int tracy_handle_syscall_hook(struct tracy_event *e) {
             tracy_quit(tracy, 1);
             break;
 
+        case TRACY_HOOK_STOP:
+            tracy_stop(tracy);
+            return 1;
+
         case TRACY_HOOK_NOHOOK:
             break;
 

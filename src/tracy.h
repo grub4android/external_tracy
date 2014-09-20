@@ -193,6 +193,7 @@ typedef void *tracy_child_addr_t, *tracy_parent_addr_t;
 #define TRACY_HOOK_NOHOOK 4
 #define TRACY_HOOK_SUPPRESS 5
 #define TRACY_HOOK_DENY 6
+#define TRACY_HOOK_STOP 7
 
 /* Setting up and tearing down a tracy session */
 
@@ -234,6 +235,16 @@ void tracy_free(struct tracy *t);
  */
 
 void tracy_quit(struct tracy* t, int exitcode);
+
+/*
+ * tracy_stop
+ *
+ * tracy_stop frees all the structures, detaches from all the
+ * children and then stops the main loop.
+ *
+ */
+
+void tracy_stop(struct tracy* t);
 
 /*
  * tracy_main
