@@ -101,9 +101,14 @@ struct tracy_abi_syscall {
  *      first event of the child; as this will always be called before you
  *      recieve an event from the new child.
  *
+ * child_destroy(tracy_child *c);
+ *
+ *      To be used to free some values when a child is removed.
+ *
  */
 struct tracy_special_events {
     tracy_child_creation child_create;
+    tracy_child_creation child_destroy;
 };
 
 struct tracy {

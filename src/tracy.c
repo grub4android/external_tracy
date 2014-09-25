@@ -97,6 +97,7 @@ struct tracy *tracy_init(long opt) {
     t->defhook = NULL;
     t->signal_hook = NULL;
     t->se.child_create = NULL;
+    t->se.child_destroy = NULL;
 
     return t;
 }
@@ -443,8 +444,12 @@ int tracy_remove_child(struct tracy_child *c) {
     int r;
     r = ll_del(c->tracy->childs, c->pid);
 
-    if (!r)
+    if (!r) {
+        if (c->tracy->se.child_destroy)
+            (c->tracy->se.child_destroy)(c);
+
         free(c);
+    }
 
     return r;
 }
