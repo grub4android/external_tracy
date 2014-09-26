@@ -411,7 +411,13 @@ struct tracy_event *tracy_wait_event(struct tracy *t, pid_t c_pid) {
             s->type = TRACY_EVENT_SYSCALL;
 
             /* Set return code to -EPERM to indicate a denied system call. */
-            s->args.return_code = -EPERM;
+            if(s->child->change_return_code) {
+                s->args.return_code = s->child->return_code;
+                s->child->change_return_code = 0;
+                s->child->return_code = 0;
+            }
+            else
+                s->args.return_code = -EPERM;
             s->args.sp = regs.TRACY_STACK_POINTER;
 
             if (tracy_modify_syscall_regs(s->child, s->child->denied_nr, &(s->args))) {
@@ -465,7 +471,17 @@ struct tracy_event *tracy_wait_event(struct tracy *t, pid_t c_pid) {
         s->args.a5 = get_reg(&regs, 5, s->abi);
         s->args.sp = regs.TRACY_STACK_POINTER;
 
-        s->args.return_code = regs.TRACY_RETURN_CODE;
+        if(s->child->change_return_code) {
+	        s->args.return_code = s->child->return_code;
+	        s->child->change_return_code = 0;
+            s->child->return_code = 0;
+            if (tracy_modify_syscall_regs(s->child, s->args.syscall, &(s->args))) {
+                fprintf(stderr, "tracy_modify_syscall_regs failed\n");
+                tracy_backtrace();
+            }
+        }
+        else
+            s->args.return_code = regs.TRACY_RETURN_CODE;
 
         s->type = TRACY_EVENT_SYSCALL;
 

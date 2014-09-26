@@ -153,6 +153,12 @@ struct tracy_child {
     /* Last denied syscall */
     int denied_nr;
 
+    /* flag if we use a custom return code */
+    int change_return_code;
+
+	/* override return code value */
+    long return_code;
+
     /* Suppress next signal on tracy_continue */
     int suppress;
 

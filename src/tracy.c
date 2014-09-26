@@ -169,6 +169,8 @@ static struct tracy_child *malloc_tracy_child(struct tracy *t, pid_t pid)
     tc->frozen_by_vfork = 0;
     tc->received_first_sigstop = 0;
     tc->denied_nr = 0;
+    tc->change_return_code = 0;
+    tc->return_code = 0;
     tc->suppress = 0;
     tc->tracy = t;
     tc->custom = NULL;
