@@ -534,4 +534,8 @@ int tracy_safe_fork(struct tracy_child *c, pid_t *new_child);
         DEST_VAR = _force_cast_ ## __LINE__.dest_type; \
     }
 
+#ifdef __glibc__
+#define TRACY_HAVE_EXECINFO
+#endif
+
 #endif
