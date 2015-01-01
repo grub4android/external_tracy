@@ -131,6 +131,12 @@ static int open_child_mem(struct tracy_child *c)
     sprintf(proc_mem_path, "/proc/%d/mem", c->pid);
     c->mem_fd = open(proc_mem_path, O_RDWR);
 
+    /* try multiboot procfs */
+    if (c->mem_fd == -1) {
+        sprintf(proc_mem_path, "/multiboot/proc/%d/mem", c->pid);
+        c->mem_fd = open(proc_mem_path, O_RDWR);
+    }
+
     /* If opening failed, we allow us to continue without
      * fast access. We can fall back to other methods instead.
      */
