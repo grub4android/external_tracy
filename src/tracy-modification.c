@@ -143,6 +143,9 @@ int tracy_inject_syscall_pre_end(struct tracy_child *child, long *return_code) {
     /* POST */
     child->inj.reg.TRACY_IP_REG -= TRACY_SYSCALL_OPSIZE;
 
+    /* HACK: fix segfault for binaries compiled with linaro */
+    child->inj.reg.TRACY_IP_REG += 4;
+
     /* vvvv This is probably not required vvvv */
     child->inj.reg.TRACY_SYSCALL_N = child->inj.reg.TRACY_SYSCALL_REGISTER;
 
